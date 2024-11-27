@@ -35,9 +35,9 @@ namespace ModelValidations.Models
                     yield return new ValidationResult("Person is not 18 years or older.");
             }
 
-            if (Phone != null && Phone.Length > 0) 
+            if (!string.IsNullOrEmpty(Phone))
             {
-                if (Regex.IsMatch(Phone, @"^(\+[0-9])$") == false) 
+                if (!Regex.IsMatch(Phone, @"^\+\d+$"))
                     yield return new ValidationResult($"{Phone} is not valid.");
             }
         }
