@@ -1,22 +1,24 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Numerics;
 using System.Text.RegularExpressions;
 using ModelValidations.Validations;
 
 namespace ModelValidations.Models
 {
-    public class Person : IValidatableObject
+    public class Person 
     {
         [Required(ErrorMessage = "{0} can't be empty or null.")]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "{0} must have 6 - 100 characters.")]
         public string? Name { get; set; }
         [EmailAddress(ErrorMessage = "{0} property should be valid. ")]
         public string? Email { get; set; }
-        public string? Phone {  get; set; }
+        [USPhoneNumber(ErrorMessage = "Phone is not valid.")]
+        public string? Phone { get; set; } 
         public string? Password { get; set; }
         public string? ConfirmPassword  { get; set; }
         public double? Price { get; set; }
 
-        //[MinimumAge(ErrorMessage = "DOB must be 18 years ago.")]
+        [MinimumAge(ErrorMessage = "DOB must be 18 years ago.")]
         public DateTime? DOB { get; set; }
 
 
@@ -26,20 +28,9 @@ namespace ModelValidations.Models
                 $"ConfirmPassword: {ConfirmPassword}, Price: {Price}.";
         }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (DOB.HasValue)
-            {
-                DateTime now = DateTime.Now;
-                if (now.Year - DOB.Value.Year <= 18)
-                    yield return new ValidationResult("Person is not 18 years or older.");
-            }
-
-            if (!string.IsNullOrEmpty(Phone))
-            {
-                if (!Regex.IsMatch(Phone, @"^\+\d+$"))
-                    yield return new ValidationResult($"{Phone} is not valid.");
-            }
-        }
+        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        //{
+            
+        //}
     }
 }
